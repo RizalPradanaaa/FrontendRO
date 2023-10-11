@@ -1,0 +1,43 @@
+/* CustomFileInput.css */
+
+/* Gaya kustom untuk input file */
+.custom-file-input {
+  display: none;
+}
+
+.custom-file-label {
+  cursor: pointer;
+}
+
+.custom-file-label::after {
+  content: "Browse";
+}
+
+.custom-file:hover .custom-file-label::after {
+  content: "Browse";
+}
+
+.custom-file:active .custom-file-label::after {
+  content: "Browse";
+}
+
+/* Gaya kustom untuk zona drag */
+.custom-dropzone {
+  border: 2px dashed #007bff;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.custom-dropzone:hover {
+  background-color: #e2e6ea;
+}
+
+/* Gaya kustom untuk pesan zona drag */
+.custom-dropzone-message {
+  font-size: 18px;
+  color: #007bff;
+}
