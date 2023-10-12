@@ -1,43 +1,30 @@
-/* CustomFileInput.css */
+.custom-file-drop-zone {
+  border: 2px dashed #3498db;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #fff;
+  cursor: pointer;
+  text-align: center;
+  transition: border 0.3s;
+  position: relative;
+}
 
-/* Gaya kustom untuk input file */
-.custom-file-input {
+.custom-file-drop-zone:hover {
+  border-color: #2980b9;
+}
+
+.custom-file-drop-zone input {
   display: none;
 }
 
-.custom-file-label {
-  cursor: pointer;
-}
-
-.custom-file-label::after {
-  content: "Browse";
-}
-
-.custom-file:hover .custom-file-label::after {
-  content: "Browse";
-}
-
-.custom-file:active .custom-file-label::after {
-  content: "Browse";
-}
-
-/* Gaya kustom untuk zona drag */
-.custom-dropzone {
-  border: 2px dashed #007bff;
-  background-color: #f8f9fa;
-  border-radius: 5px;
-  padding: 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.custom-dropzone:hover {
-  background-color: #e2e6ea;
-}
-
-/* Gaya kustom untuk pesan zona drag */
-.custom-dropzone-message {
+.drop-zone-text {
+  display: flex;
+  flex-direction: column;
+  color: #3498db;
   font-size: 18px;
-  color: #007bff;
+  gap: 5px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

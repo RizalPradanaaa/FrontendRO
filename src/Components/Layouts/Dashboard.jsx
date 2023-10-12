@@ -1,9 +1,10 @@
 import React from "react";
-import { Navbar } from "../Components/Fragments/Navbar";
-import { Sidebar } from "../Components/Fragments/Sidebar";
-import { Footer } from "../Components/Fragments/Footer";
+import { Navbar } from "../Fragments/Navbar";
+import { Sidebar } from "../Fragments/Sidebar";
+import { Footer } from "../Fragments/Footer";
 
-export const Dashboard = () => {
+export const Dashboard = (props) => {
+  const { children } = props;
   return (
     <>
       <div id="wrapper">
@@ -11,9 +12,7 @@ export const Dashboard = () => {
         <div id="content-wrapper" className="d-flex flex-column">
           <div id="content">
             <Navbar></Navbar>
-            <div className="container-fluid">
-              <h1 className="h3 mb-4 text-gray-800">Blank Page</h1>
-            </div>
+            <div className="container-fluid">{children}</div>
           </div>
 
           <Footer></Footer>
