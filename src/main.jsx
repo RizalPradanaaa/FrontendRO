@@ -6,12 +6,17 @@ import { ComparePage } from "./Pages/ComparePage";
 import { ErrorPage } from "./Pages/ErrorPage";
 // import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { DataPage } from "./Pages/DataPage";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <ComparePage />,
     errorElement: <ErrorPage />,
+  },
+  {
+    path: "/data",
+    element: <DataPage />,
   },
 ]);
 
