@@ -10,6 +10,7 @@ export const ComparePage = () => {
   const [currentPage1, setCurrentPage1] = useState(1);
   const [currentPage2, setCurrentPage2] = useState(1);
 
+  // Untuk Menangani File Upload
   const handleFile1Change = (e) => {
     setFile1(e.target.files[0]);
   };
@@ -28,9 +29,29 @@ export const ComparePage = () => {
     }
   };
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 10; // Maksimal 10 Data Yang Ditampilkan
   const maxPageNumbers = 5; // Maksimal 5 angka halaman yang ditampilkan
 
+  // Untuk Menangani File Yang Dihapus Tabel 1
+  const handleDeleteRow1 = (index) => {
+    const updatedFile1NotInFile2 = [...comparisonResult.file1NotInFile2];
+    updatedFile1NotInFile2.splice(index, 1);
+    setComparisonResult({
+      ...comparisonResult,
+      file1NotInFile2: updatedFile1NotInFile2,
+    });
+  };
+  // Untuk Menangani File Yang Dihapus Tabel 2
+  const handleDeleteRow2 = (index) => {
+    const updatedFile2NotInFile1 = [...comparisonResult.file2NotInFile1];
+    updatedFile2NotInFile1.splice(index, 1);
+    setComparisonResult({
+      ...comparisonResult,
+      file2NotInFile1: updatedFile2NotInFile1,
+    });
+  };
+
+  // Render Tabel Data 1
   const renderTable1Data = () => {
     if (!comparisonResult) return null;
 
@@ -41,12 +62,23 @@ export const ComparePage = () => {
       .slice(startIndex, endIndex)
       .map((row, index) => (
         <tr key={index}>
+          <td>{startIndex + index + 1}</td>
           <td>{row.NIK}</td>
           <td>{row.Nama}</td>
+          <td>{row.NamaFasyankes}</td>
+          <td>
+            <button
+              className="badge rounded-pill btn btn-danger shadow"
+              onClick={() => handleDeleteRow1(index)}
+            >
+              Hapus
+            </button>
+          </td>
         </tr>
       ));
   };
 
+  // Render Data Tabel 2
   const renderTable2Data = () => {
     if (!comparisonResult) return null;
 
@@ -57,8 +89,18 @@ export const ComparePage = () => {
       .slice(startIndex, endIndex)
       .map((row, index) => (
         <tr key={index}>
+          <td>{startIndex + index + 1}</td>
           <td>{row.NIK}</td>
           <td>{row.Nama}</td>
+          <td>{row.NamaFasyankes}</td>
+          <td>
+            <button
+              className="badge rounded-pill btn btn-danger shadow"
+              onClick={() => handleDeleteRow2(index)}
+            >
+              Hapus
+            </button>
+          </td>
         </tr>
       ));
   };
@@ -106,6 +148,34 @@ export const ComparePage = () => {
           <div className="col-12 mt-3 fs-1 fw-bold">
             <h1 className="h3 mb-4 mx-3 text-gray-800">Excel Compare Page</h1>
           </div>
+          {comparisonnull && (
+            <div className="row d-flex justify-content-center">
+              <div className="col-xl-8">
+                <div
+                  className="alert alert-danger alert-dismissible fade show text-center"
+                  role="alert"
+                  style={{ display: "block" }}
+                >
+                  <strong>{comparisonnull}</strong>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                    onClick={() => {
+                      const alert = document.querySelector(
+                        ".alert.alert-warning"
+                      );
+                      if (alert) {
+                        alert.style.display = "none";
+                      }
+                      window.location.reload();
+                    }}
+                  ></button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
         <div className="row d-flex justify-content-start ml-xl-1 ">
           <div className="col-xl-4 col-md-6 mb-4 ">
@@ -116,7 +186,7 @@ export const ComparePage = () => {
                     <div className="mb-3">
                       <label htmlFor="file1" className="form-label ">
                         <p className="text-sm font-weight-bold text-primary mb-1 ">
-                          Pilih File pertama
+                          Pilih File Excel Dinkes
                         </p>
                       </label>
                       <input
@@ -140,7 +210,7 @@ export const ComparePage = () => {
                     <div className="mb-3">
                       <label htmlFor="file2" className="form-label ">
                         <p className="text-sm font-weight-bold text-primary mb-1 ">
-                          Pilih File Kedua
+                          Pilih File Excel Komunitas
                         </p>
                       </label>
                       <input
@@ -163,20 +233,6 @@ export const ComparePage = () => {
           </div>
         </div>
 
-        {comparisonnull && (
-          // <p className="text-danger fw-bold h1 text-center">{comparisonnull}</p>
-          <div className="row d-flex justify-content-center">
-            <div className="col-6">
-              <div
-                className="alert alert-warning alert-dismissible fade show text-center"
-                role="alert"
-              >
-                <strong>{comparisonnull}</strong>
-              </div>
-            </div>
-          </div>
-        )}
-
         <div className="row ml-xl-1">
           <div className="col-12">
             <h3 className="h3 mb-3 text-gray-800">Hasil Perbandingan:</h3>
@@ -189,9 +245,18 @@ export const ComparePage = () => {
               <div className="col-12">
                 <div className="card shadow mb-4">
                   <div className="card-header py-3">
-                    <h6 className="m-0 font-weight-bold text-primary">
-                      Data Unik File Pertama
-                    </h6>
+                    <div className="row d-flex justify-content-between">
+                      <div className="col-4">
+                        <h4 className="m-0 font-weight-bold text-primary">
+                          Data Unik Dinkes
+                        </h4>
+                      </div>
+                      <div className="col-4 text-end mr-5">
+                        <button className="  btn btn-primary shadow">
+                          Simpan
+                        </button>
+                      </div>
+                    </div>
                   </div>
                   <div className="card-body">
                     <div className="table-responsive">
@@ -199,19 +264,27 @@ export const ComparePage = () => {
                         className="table table-stripe"
                         id="dataTable"
                         width="100%"
-                        cellspacing="0"
                       >
                         <thead>
                           <tr>
+                            <th>No.</th>
                             <th>NIK</th>
-                            <th>Nama</th>
+                            <th>Nama Pasien</th>
+                            <th>Nama Fasyankes</th>
+                            <th>Aksi</th>
                           </tr>
                         </thead>
                         <tbody>{renderTable1Data()}</tbody>
                       </table>
                     </div>
                   </div>
-                  <div className="row d-flex justify-content-end mb-2">
+                  <div className="row d-flex justify-content-between mb-2">
+                    <div className="col-4">
+                      <p className="h-5 ml-xl-4 text-gray-900 fw-bold">
+                        Total : {comparisonResult.file1NotInFile2.length}
+                      </p>
+                    </div>
+
                     <div className="col-4">
                       <nav aria-label="Page navigation example">
                         <ul className="pagination">
@@ -259,7 +332,7 @@ export const ComparePage = () => {
                 <div className="card shadow mb-4">
                   <div className="card-header py-3">
                     <h6 className="m-0 font-weight-bold text-primary">
-                      Data Unik File Pertama
+                      Data Unik Komunitas
                     </h6>
                   </div>
                   <div className="card-body">
@@ -268,19 +341,26 @@ export const ComparePage = () => {
                         className="table table-stripe"
                         id="dataTable"
                         width="100%"
-                        cellspacing="0"
                       >
                         <thead>
                           <tr>
+                            <th>No.</th>
                             <th>NIK</th>
                             <th>Nama</th>
+                            <th>Nama Fasyankes</th>
+                            <th>Aksi</th>
                           </tr>
                         </thead>
                         <tbody>{renderTable2Data()}</tbody>
                       </table>
                     </div>
                   </div>
-                  <div className="row d-flex justify-content-end">
+                  <div className="row d-flex justify-content-between">
+                    <div className="col-4">
+                      <p className="h-5 ml-xl-4 text-gray-900 fw-bold">
+                        Total : {comparisonResult.file2NotInFile1.length}
+                      </p>
+                    </div>
                     <div className="col-4">
                       <nav aria-label="Page navigation example">
                         <ul className="pagination">

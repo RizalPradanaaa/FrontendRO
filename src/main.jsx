@@ -1,17 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import FileUpload from "./FileUpload";
-import CustomFileInput from "./CustomFile.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { ComparePage } from "./Pages/ComparePage";
-import "./CustomFileInput.css";
+import { ErrorPage } from "./Pages/ErrorPage";
 // import "./index.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <ComparePage />,
+    errorElement: <ErrorPage />,
+  },
+]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ComparePage />
-    {/* <FileUpload /> */}
-    {/* <CustomFileInput /> */}
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
