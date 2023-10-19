@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Dashboard } from "../Components/Layouts/Dashboard";
-import { compareExcel } from "../services/compare.services";
 
 export const DataPage = () => {
   return (

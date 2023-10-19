@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 export const Sidebar = () => {
   return (
@@ -20,18 +21,31 @@ export const Sidebar = () => {
       <hr className="sidebar-divider my-0" />
       <hr className="sidebar-divider" />
       <div className="sidebar-heading ">Menu</div>
-      <li className="nav-item">
-        <a className="nav-link collapsed" href="/">
-          <i className="fas fa-fw fa-cog"></i>
+
+      <NavLink
+        to="/"
+        className={({ isActive }) =>
+          isActive ? "nav-item active" : "nav-item"
+        }
+      >
+        <li className="nav-link collapsed">
+          <i className="fas fa-fw fa-wrench"></i>
           <span>Compare</span>
-        </a>
-      </li>
-      <li className="nav-item">
-        <a className="nav-link collapsed" href="/data">
+        </li>
+      </NavLink>
+
+      <NavLink
+        to="/data"
+        className={({ isActive }) =>
+          isActive ? "nav-item active" : "nav-item"
+        }
+      >
+        <li className="nav-link collapsed">
           <i className="fas fa-fw fa-wrench"></i>
           <span>Data</span>
-        </a>
-      </li>
+        </li>
+      </NavLink>
+
       <hr className="sidebar-divider" />
       <div className="sidebar-heading">Settings</div>
       <hr className="sidebar-divider d-none d-md-block" />
