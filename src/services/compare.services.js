@@ -15,7 +15,6 @@ export const compareExcel = async (file1, file2) => {
         },
       }
     );
-
     return response.data;
   } catch (error) {
     throw error.response;

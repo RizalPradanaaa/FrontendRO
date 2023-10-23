@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Dashboard } from "../Components/Layouts/Dashboard";
 import { compareExcel } from "../services/compare.services";
+import { saveData } from "../services/data.services";
 
 export const ComparePage = () => {
   const [file1, setFile1] = useState(null);
@@ -9,6 +10,7 @@ export const ComparePage = () => {
   const [comparisonnull, setComparisonnull] = useState("");
   const [currentPage1, setCurrentPage1] = useState(1);
   const [currentPage2, setCurrentPage2] = useState(1);
+  const [responseSaveData, setResponseSaveData] = useState("");
 
   // Untuk Menangani File Upload
   const handleFile1Change = (e) => {
@@ -26,6 +28,17 @@ export const ComparePage = () => {
       setComparisonResult(response);
     } catch (error) {
       setComparisonnull(error.data.msg);
+    }
+  };
+
+  const handleSaveData = async (e) => {
+    e.preventDefault();
+    const data = comparisonResult.file1NotInFile2;
+    try {
+      const response = await saveData(data);
+      setResponseSaveData(response.msg);
+    } catch (error) {
+      setResponseSaveData(error.data.msg);
     }
   };
 
@@ -163,13 +176,41 @@ export const ComparePage = () => {
                     data-bs-dismiss="alert"
                     aria-label="Close"
                     onClick={() => {
+                      setComparisonnull("");
                       const alert = document.querySelector(
                         ".alert.alert-warning"
                       );
                       if (alert) {
                         alert.style.display = "none";
                       }
-                      window.location.reload();
+                    }}
+                  ></button>
+                </div>
+              </div>
+            </div>
+          )}
+          {responseSaveData && (
+            <div className="row d-flex justify-content-center">
+              <div className="col-xl-8">
+                <div
+                  className="alert alert-warning alert-dismissible fade show text-center"
+                  role="alert"
+                  style={{ display: "block" }}
+                >
+                  <strong>{responseSaveData}</strong>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                    onClick={() => {
+                      setResponseSaveData("");
+                      const alert = document.querySelector(
+                        ".alert.alert-warning"
+                      );
+                      if (alert) {
+                        alert.style.display = "none";
+                      }
                     }}
                   ></button>
                 </div>
@@ -252,9 +293,14 @@ export const ComparePage = () => {
                         </h4>
                       </div>
                       <div className="col-4 text-end mr-5">
-                        <button className="  btn btn-primary shadow">
-                          Simpan
-                        </button>
+                        <form onSubmit={handleSaveData}>
+                          <button
+                            type="submit"
+                            className="  btn btn-primary shadow"
+                          >
+                            Simpan
+                          </button>
+                        </form>
                       </div>
                     </div>
                   </div>
