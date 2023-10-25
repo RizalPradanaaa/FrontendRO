@@ -31,9 +31,30 @@ export const ComparePage = () => {
     }
   };
 
-  const handleSaveData = async (e) => {
+  const handleSaveData1 = async (e) => {
     e.preventDefault();
     const data = comparisonResult.file1NotInFile2;
+    // Menambah Tipe Untuk Membedakan Tipe
+    data.forEach((e) => {
+      e.Tipe = 1;
+    });
+    console.log(data);
+    try {
+      const response = await saveData(data);
+      setResponseSaveData(response.msg);
+    } catch (error) {
+      setResponseSaveData(error.data.msg);
+    }
+  };
+
+  const handleSaveData2 = async (e) => {
+    e.preventDefault();
+    const data = comparisonResult.file2NotInFile1;
+    // Menambah Tipe Untuk Membedakan Tipe
+    data.forEach((e) => {
+      e.Tipe = 0;
+    });
+    console.log(data);
     try {
       const response = await saveData(data);
       setResponseSaveData(response.msg);
@@ -293,7 +314,7 @@ export const ComparePage = () => {
                         </h4>
                       </div>
                       <div className="col-4 text-end mr-5">
-                        <form onSubmit={handleSaveData}>
+                        <form onSubmit={handleSaveData1}>
                           <button
                             type="submit"
                             className="  btn btn-primary shadow"
@@ -377,10 +398,25 @@ export const ComparePage = () => {
               <div className="col-12">
                 <div className="card shadow mb-4">
                   <div className="card-header py-3">
-                    <h6 className="m-0 font-weight-bold text-primary">
-                      Data Unik Komunitas
-                    </h6>
+                    <div className="row d-flex justify-content-between">
+                      <div className="col-4">
+                        <h4 className="m-0 font-weight-bold text-primary">
+                          Data Unik Komunitas
+                        </h4>
+                      </div>
+                      <div className="col-4 text-end mr-5">
+                        <form onSubmit={handleSaveData2}>
+                          <button
+                            type="submit"
+                            className="  btn btn-primary shadow"
+                          >
+                            Simpan
+                          </button>
+                        </form>
+                      </div>
+                    </div>
                   </div>
+
                   <div className="card-body">
                     <div className="table-responsive">
                       <table
