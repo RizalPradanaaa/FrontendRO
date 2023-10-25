@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Dashboard } from "../Components/Layouts/Dashboard";
 import { deleteDataId, getAllData } from "../services/data.services";
+import * as XLSX from "xlsx";
 
 export const DataPage = () => {
   const [dataResult, setDataResult] = useState(null);
@@ -9,7 +10,7 @@ export const DataPage = () => {
   const [responseDeletedData, setResponseDeletedData] = useState("");
 
   // Untuk Menangani row Yang Dihapus Tabel 1
-  const handleDeleteRow1 = async (id) => {
+  const handleDeleteRow = async (id) => {
     try {
       const response = await deleteDataId(id);
 
@@ -57,7 +58,7 @@ export const DataPage = () => {
         <td>
           <button
             className="badge rounded-pill btn btn-danger shadow"
-            onClick={() => handleDeleteRow1(row.id)}
+            onClick={() => handleDeleteRow(row.id)}
           >
             Hapus
           </button>
@@ -85,7 +86,7 @@ export const DataPage = () => {
         <td>
           <button
             className="badge rounded-pill btn btn-danger shadow"
-            onClick={() => handleDeleteRow1(row.id)}
+            onClick={() => handleDeleteRow(row.id)}
           >
             Hapus
           </button>
@@ -128,6 +129,19 @@ export const DataPage = () => {
       );
     }
     return pageNumbers;
+  };
+
+  // Fungsi untuk mengonversi JSON ke XLSX
+  const ExportToExcel = (data, name) => {
+    // Menggunakan map untuk menciptakan salinan data yang sudah difilter
+    const filteredData = data.map(
+      ({ id, Tipe, createdAt, updatedAt, ...rest }) => rest
+    );
+
+    const ws = XLSX.utils.json_to_sheet(filteredData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "DataSheet");
+    XLSX.writeFile(wb, name + ".xlsx"); // Mengunduh file dengan nama 'data.xlsx'
   };
 
   return (
@@ -182,8 +196,14 @@ export const DataPage = () => {
                         <button
                           type="submit"
                           className="  btn btn-success shadow"
+                          onClick={() =>
+                            ExportToExcel(
+                              dataResult.filter((row) => row.Tipe == 1),
+                              "Data_Dinkes"
+                            )
+                          }
                         >
-                          Ekspor
+                          Eksport
                         </button>
                       </div>
                     </div>
@@ -274,8 +294,14 @@ export const DataPage = () => {
                         <button
                           type="submit"
                           className="  btn btn-success shadow"
+                          onClick={() =>
+                            ExportToExcel(
+                              dataResult.filter((row) => row.Tipe == 0),
+                              "Data_Komunitas"
+                            )
+                          }
                         >
-                          Ekspor
+                          Eksport
                         </button>
                       </div>
                     </div>
