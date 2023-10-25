@@ -13,6 +13,13 @@ export const DataPage = () => {
   const handleDeleteRow1 = async (id) => {
     try {
       const response = await deleteDataId(id);
+
+      // Melakukan Get Data lagi
+      getAllData((data) => {
+        //console.log(data);
+        setDataResult(data);
+      });
+
       setResponseDeletedData("");
       setResponseDeletedData(response.msg);
     } catch (error) {
@@ -26,7 +33,7 @@ export const DataPage = () => {
       //console.log(data);
       setDataResult(data);
     });
-  }, [handleDeleteRow1]);
+  }, []);
 
   const itemsPerPage = 10; // Maksimal 10 Data Yang Ditampilkan
   const maxPageNumbers = 5; // Maksimal 5 angka halaman yang ditampilkan
@@ -35,10 +42,13 @@ export const DataPage = () => {
   const renderTable1Data = () => {
     if (!dataResult) return null;
 
+    // Filter data berdasarkan "tipe" yang memiliki nilai 1
+    const filteredData = dataResult.filter((row) => row.Tipe == 1);
+
     const startIndex = (currentPage1 - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
 
-    return dataResult.slice(startIndex, endIndex).map((row, index) => (
+    return filteredData.slice(startIndex, endIndex).map((row, index) => (
       <tr key={index}>
         <td>{startIndex + index + 1}</td>
         <td style={{ display: "none" }}>{row.id}</td>
@@ -174,7 +184,10 @@ export const DataPage = () => {
                   <div className="row d-flex justify-content-between mb-2">
                     <div className="col-4">
                       <p className="h-5 ml-xl-4 text-gray-900 fw-bold">
-                        Total : {dataResult.length}
+                        Total :{" "}
+                        {dataResult
+                          ? dataResult.filter((row) => row.Tipe == 1).length
+                          : 0}
                       </p>
                     </div>
 
