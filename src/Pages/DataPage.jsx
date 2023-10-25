@@ -4,7 +4,6 @@ import { deleteDataId, getAllData } from "../services/data.services";
 
 export const DataPage = () => {
   const [dataResult, setDataResult] = useState(null);
-  const [comparisonnull, setComparisonnull] = useState("");
   const [currentPage1, setCurrentPage1] = useState(1);
   const [currentPage2, setCurrentPage2] = useState(1);
   const [responseDeletedData, setResponseDeletedData] = useState("");
@@ -46,6 +45,34 @@ export const DataPage = () => {
     const filteredData = dataResult.filter((row) => row.Tipe == 1);
 
     const startIndex = (currentPage1 - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
+    return filteredData.slice(startIndex, endIndex).map((row, index) => (
+      <tr key={index}>
+        <td>{startIndex + index + 1}</td>
+        <td style={{ display: "none" }}>{row.id}</td>
+        <td>{row.NIK}</td>
+        <td>{row.Nama}</td>
+        <td>{row.NamaFasyankes}</td>
+        <td>
+          <button
+            className="badge rounded-pill btn btn-danger shadow"
+            onClick={() => handleDeleteRow1(row.id)}
+          >
+            Hapus
+          </button>
+        </td>
+      </tr>
+    ));
+  };
+
+  const renderTable2Data = () => {
+    if (!dataResult) return null;
+
+    // Filter data berdasarkan "tipe" yang memiliki nilai 1
+    const filteredData = dataResult.filter((row) => row.Tipe == 0);
+
+    const startIndex = (currentPage2 - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
 
     return filteredData.slice(startIndex, endIndex).map((row, index) => (
@@ -205,7 +232,10 @@ export const DataPage = () => {
                           </li>
                           <li className="page-item">
                             {renderPageNumbers(
-                              Math.ceil(dataResult.length / itemsPerPage),
+                              Math.ceil(
+                                dataResult.filter((row) => row.Tipe == 1)
+                                  .length / itemsPerPage
+                              ),
                               currentPage1,
                               setCurrentPage1
                             )}
@@ -215,7 +245,8 @@ export const DataPage = () => {
                               className="page-link"
                               onClick={() => setCurrentPage1(currentPage1 + 1)}
                               disabled={
-                                currentPage1 * itemsPerPage >= dataResult.length
+                                currentPage1 * itemsPerPage >=
+                                dataResult.filter((row) => row.Tipe == 1).length
                               }
                             >
                               Next
@@ -229,13 +260,25 @@ export const DataPage = () => {
               </div>
             </div>
 
-            {/* <div className="row">
+            <div className="row">
               <div className="col-12">
                 <div className="card shadow mb-4">
                   <div className="card-header py-3">
-                    <h6 className="m-0 font-weight-bold text-primary">
-                      Data Unik Komunitas
-                    </h6>
+                    <div className="row d-flex justify-content-between">
+                      <div className="col-4">
+                        <h4 className="m-0 font-weight-bold text-primary">
+                          Data Unik Komunitas
+                        </h4>
+                      </div>
+                      <div className="col-4 text-end mr-5">
+                        <button
+                          type="submit"
+                          className="  btn btn-success shadow"
+                        >
+                          Ekspor
+                        </button>
+                      </div>
+                    </div>
                   </div>
                   <div className="card-body">
                     <div className="table-responsive">
@@ -260,7 +303,10 @@ export const DataPage = () => {
                   <div className="row d-flex justify-content-between">
                     <div className="col-4">
                       <p className="h-5 ml-xl-4 text-gray-900 fw-bold">
-                        Total : {comparisonResult.file2NotInFile1.length}
+                        Total :{" "}
+                        {dataResult
+                          ? dataResult.filter((row) => row.Tipe == 0).length
+                          : 0}
                       </p>
                     </div>
                     <div className="col-4">
@@ -278,8 +324,8 @@ export const DataPage = () => {
                           <li className="page-item">
                             {renderPageNumbers(
                               Math.ceil(
-                                comparisonResult.file2NotInFile1.length /
-                                  itemsPerPage
+                                dataResult.filter((row) => row.Tipe == 0)
+                                  .length / itemsPerPage
                               ),
                               currentPage2,
                               setCurrentPage2
@@ -291,7 +337,7 @@ export const DataPage = () => {
                               onClick={() => setCurrentPage2(currentPage2 + 1)}
                               disabled={
                                 currentPage1 * itemsPerPage >=
-                                comparisonResult.file2NotInFile1.length
+                                dataResult.filter((row) => row.Tipe == 0).length
                               }
                             >
                               Next
@@ -303,13 +349,11 @@ export const DataPage = () => {
                   </div>
                 </div>
               </div>
-            </div> */}
+            </div>
           </div>
         ) : (
           <>
-            <p className="h-5 mb-4 ml-xl-4 text-gray-800">
-              Hasil perbandingan!!
-            </p>
+            <p className="h-5 mb-4 ml-xl-4 text-gray-800">Tidak Ada Data</p>
           </>
         )}
       </div>
