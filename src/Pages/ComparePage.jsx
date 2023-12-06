@@ -38,7 +38,7 @@ export const ComparePage = () => {
     data.forEach((e) => {
       e.Tipe = 1;
     });
-    console.log(data);
+    //console.log(data);
     try {
       const response = await saveData(data);
       setResponseSaveData(response.msg);
@@ -54,7 +54,7 @@ export const ComparePage = () => {
     data.forEach((e) => {
       e.Tipe = 0;
     });
-    console.log(data);
+    //console.log(data);
     try {
       const response = await saveData(data);
       setResponseSaveData(response.msg);
@@ -99,7 +99,9 @@ export const ComparePage = () => {
           <td>{startIndex + index + 1}</td>
           <td>{row.NIK}</td>
           <td>{row.Nama}</td>
+          <td>{row.KabupatenKota}</td>
           <td>{row.NamaFasyankes}</td>
+          <td>{row.TindakLanjut}</td>
           <td>
             <button
               className="badge rounded-pill btn btn-danger shadow"
@@ -337,7 +339,9 @@ export const ComparePage = () => {
                             <th>No.</th>
                             <th>NIK</th>
                             <th>Nama Pasien</th>
+                            <th>Kabupaten / Kota</th>
                             <th>Nama Fasyankes</th>
+                            <th>Tindak Lanjut</th>
                             <th>Aksi</th>
                           </tr>
                         </thead>

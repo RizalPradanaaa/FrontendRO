@@ -7,6 +7,7 @@ import { ErrorPage } from "./Pages/ErrorPage";
 // import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { DataPage } from "./Pages/DataPage";
+import { ChartPage } from "./Pages/ChartPage";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
   {
     path: "/data",
     element: <DataPage />,
+  },
+  {
+    path: "/chart",
+    element: <ChartPage />,
   },
 ]);
 

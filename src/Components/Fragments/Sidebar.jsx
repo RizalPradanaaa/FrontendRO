@@ -46,6 +46,18 @@ export const Sidebar = () => {
         </li>
       </NavLink>
 
+      <NavLink
+        to="/chart"
+        className={({ isActive }) =>
+          isActive ? "nav-item active" : "nav-item"
+        }
+      >
+        <li className="nav-link collapsed">
+          <i className="fas fa-fw fa-wrench"></i>
+          <span>Chart</span>
+        </li>
+      </NavLink>
+
       <hr className="sidebar-divider" />
       <div className="sidebar-heading">Settings</div>
       <hr className="sidebar-divider d-none d-md-block" />

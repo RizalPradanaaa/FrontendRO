@@ -54,7 +54,9 @@ export const DataPage = () => {
         <td style={{ display: "none" }}>{row.id}</td>
         <td>{row.NIK}</td>
         <td>{row.Nama}</td>
+        <td>{row.KabupatenKota}</td>
         <td>{row.NamaFasyankes}</td>
+        <td>{row.TindakLanjut}</td>
         <td>
           <button
             className="badge rounded-pill btn btn-danger shadow"
@@ -220,7 +222,9 @@ export const DataPage = () => {
                             <th>No.</th>
                             <th>NIK</th>
                             <th>Nama Pasien</th>
+                            <th>Kabupaten / Kota</th>
                             <th>Nama Fasyankes</th>
+                            <th>Tindak Lanjut</th>
                             <th>Aksi</th>
                           </tr>
                         </thead>
