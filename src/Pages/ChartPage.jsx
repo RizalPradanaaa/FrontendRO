@@ -11,85 +11,21 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Dashboard } from "../Components/Layouts/Dashboard";
-import { getAllData } from "../services/data.services";
+import { getAllData, getDataByCity } from "../services/data.services";
 import Select from "react-select";
 
 export const ChartPage = () => {
-  const data = [
-    {
-      name: "Januari",
-      Terdiagnosa: 300,
-      Meninggal: 30,
-      Sembuh: 20,
-    },
-    {
-      name: "Februari",
-      Terdiagnosa: 200,
-      Meninggal: 10,
-      Sembuh: 30,
-    },
-    {
-      name: "Maret",
-      Terdiagnosa: 100,
-      Meninggal: 2,
-      Sembuh: 30,
-    },
-    {
-      name: "April",
-      Terdiagnosa: 231,
-      Meninggal: 1,
-      Sembuh: 27,
-    },
-    {
-      name: "Mei",
-      Terdiagnosa: 293,
-      Meninggal: 12,
-      Sembuh: 40,
-    },
-    {
-      name: "Juni",
-      Terdiagnosa: 120,
-      Meninggal: 20,
-      Sembuh: 20,
-    },
-    {
-      name: "Juli",
-      Terdiagnosa: 80,
-      Meninggal: 4,
-      Sembuh: 10,
-    },
-    {
-      name: "Agustus",
-      Terdiagnosa: 70,
-      Meninggal: 30,
-      Sembuh: 4,
-    },
-    {
-      name: "September",
-      Terdiagnosa: 30,
-      Meninggal: 30,
-      Sembuh: 0,
-    },
-    {
-      name: "Oktober",
-      Terdiagnosa: 80,
-      Meninggal: 0,
-      Sembuh: 20,
-    },
-    {
-      name: "November",
-      Terdiagnosa: 67,
-      Meninggal: 2,
-      Sembuh: 3,
-    },
-    {
-      name: "Desember",
-      Terdiagnosa: 30,
-      Meninggal: 9,
-      Sembuh: 6,
-    },
-  ];
+  //   const datas = [
+  //     {
+  //       name: "Januari",
+  //       "Meninggal sebelum pengobatan": 1,
+  //       "Akan Diobati/Dirujuk": 3,
+  //     },
+  //   ];
+  const [data, setData] = useState(null);
   const [kota, setKota] = useState(null);
+  const [diagnosa, setDiagnosa] = useState([]);
+  const [responsedata, setResponsedata] = useState("");
 
   // Mengambil data
   useEffect(() => {
@@ -105,6 +41,63 @@ export const ChartPage = () => {
       setKota(result);
     });
   }, []);
+
+  const handleChange = async (e) => {
+    const city = e.value;
+    try {
+      // Fetch Data API
+      const response = await getDataByCity(city);
+
+      //  Mengambil data tndak lanjut
+      const diagnosares = new Set(response.map((item) => item.TindakLanjut));
+      const diagnosaunik = [...diagnosares];
+
+      // Membuat object untuk data
+      const result = response.reduce((accumulator, item) => {
+        const tindakLanjut = item.TindakLanjut;
+
+        // Mengecek apakah tindak lanjut sudah ada dalam objek accumulator
+        if (accumulator.hasOwnProperty(tindakLanjut)) {
+          accumulator[tindakLanjut]++;
+        } else {
+          accumulator[tindakLanjut] = 1;
+        }
+
+        return accumulator;
+      }, {});
+
+      // Menambahkan field 'name' dan mengubah format objek
+      const resultWithNames = {
+        name: "Januari", // Gantilah dengan nilai yang sesuai
+        ...result,
+      };
+
+      setData([resultWithNames]);
+
+      setDiagnosa(diagnosaunik);
+    } catch (error) {
+      setResponsedata(error.data.msg);
+    }
+  };
+
+  // Fungsi bantu untuk mendapatkan warna berdasarkan key (opsional)
+  const getFillColorByKey = (key) => {
+    switch (key) {
+      case "Akan Diobati/Dirujuk":
+        return "#42f59b";
+      case "Belum Mulai Pengobatan":
+        return "#d7f542";
+      case "Lost to follow up sebelum pengobatan":
+        return "#f5c542";
+      case "Melanjutkan Pengobatan Sebelumnya":
+        return "#42bff5";
+      case "Meninggal sebelum pengobatan":
+        return "#f54263";
+      default:
+        return "#b342f5"; // Warna default atau sesuaikan dengan kebutuhan Anda
+    }
+  };
+
   return (
     <Dashboard>
       <div className="container-xl">
@@ -114,7 +107,7 @@ export const ChartPage = () => {
           </div>
           <div className="row">
             <div className="col-4 ml-3 mb-4">
-              <Select options={kota} />
+              <Select options={kota} onChange={(e) => handleChange(e)} />
             </div>
           </div>
         </div>
@@ -136,9 +129,10 @@ export const ChartPage = () => {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="Terdiagnosa" fill="#5187fc" />
-              <Bar dataKey="Meninggal" fill="#fc3903" />
-              <Bar dataKey="Sembuh" fill="#82ca9d" />
+
+              {diagnosa.map((key, index) => (
+                <Bar key={index} dataKey={key} fill={getFillColorByKey(key)} />
+              ))}
             </BarChart>
           </div>
         </div>

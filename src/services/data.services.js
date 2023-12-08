@@ -25,6 +25,15 @@ export const saveData = async (data) => {
   }
 };
 
+export const getDataByCity = async (city) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/data/${city}`);
+    return response.data;
+  } catch (error) {
+    throw error.response;
+  }
+};
+
 export const deleteDataId = async (id) => {
   try {
     const response = await axios.delete(`http://localhost:5000/data/${id}`);
