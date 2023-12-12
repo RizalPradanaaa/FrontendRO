@@ -42,6 +42,49 @@ export const ChartPage = () => {
     });
   }, []);
 
+  //   const handleChange = async (e) => {
+  //     const city = e.value;
+  //     try {
+  //       // Fetch Data API
+  //       const response = await getDataByCity(city);
+
+  //       //  Mengambil data bulan
+  //       const bulan = new Set(response.map((item) => item.Bulan));
+  //       const bulanunik = [...bulan];
+  //       console.log(bulanunik);
+
+  //       //  Mengambil data tndak lanjut
+  //       const diagnosares = new Set(response.map((item) => item.TindakLanjut));
+  //       const diagnosaunik = [...diagnosares];
+
+  //       // Membuat object untuk data
+  //       const result = response.reduce((accumulator, item) => {
+  //         const tindakLanjut = item.TindakLanjut;
+
+  //         // Mengecek apakah tindak lanjut sudah ada dalam objek accumulator
+  //         if (accumulator.hasOwnProperty(tindakLanjut)) {
+  //           accumulator[tindakLanjut]++;
+  //         } else {
+  //           accumulator[tindakLanjut] = 1;
+  //         }
+
+  //         return accumulator;
+  //       }, {});
+
+  //       // Menambahkan field 'name' dan mengubah format objek
+  //       const resultWithNames = {
+  //         name: "Januari", // Gantilah dengan nilai yang sesuai
+  //         ...result,
+  //       };
+
+  //       setData([resultWithNames]);
+
+  //       setDiagnosa(diagnosaunik);
+  //     } catch (error) {
+  //       setResponsedata(error.data.msg);
+  //     }
+  //   };
+
   const handleChange = async (e) => {
     const city = e.value;
     try {
@@ -51,30 +94,46 @@ export const ChartPage = () => {
       //  Mengambil data tndak lanjut
       const diagnosares = new Set(response.map((item) => item.TindakLanjut));
       const diagnosaunik = [...diagnosares];
-
-      // Membuat object untuk data
-      const result = response.reduce((accumulator, item) => {
-        const tindakLanjut = item.TindakLanjut;
-
-        // Mengecek apakah tindak lanjut sudah ada dalam objek accumulator
-        if (accumulator.hasOwnProperty(tindakLanjut)) {
-          accumulator[tindakLanjut]++;
-        } else {
-          accumulator[tindakLanjut] = 1;
-        }
-
-        return accumulator;
-      }, {});
-
-      // Menambahkan field 'name' dan mengubah format objek
-      const resultWithNames = {
-        name: "Januari", // Gantilah dengan nilai yang sesuai
-        ...result,
-      };
-
-      setData([resultWithNames]);
-
       setDiagnosa(diagnosaunik);
+
+      // Mengambil data bulan
+      const bulanUnik = [...new Set(response.map((item) => item.Bulan))];
+
+      // Membuat array untuk menyimpan hasil setiap bulan
+      const resultByMonth = [];
+
+      // Loop melalui setiap bulan
+      bulanUnik.forEach((bulan) => {
+        // Filter data berdasarkan bulan
+        const dataByMonth = response.filter((item) => item.Bulan === bulan);
+
+        // Membuat objek untuk data
+        const result = dataByMonth.reduce((accumulator, item) => {
+          const tindakLanjut = item.TindakLanjut;
+
+          // Mengecek apakah tindak lanjut sudah ada dalam objek accumulator
+          if (accumulator.hasOwnProperty(tindakLanjut)) {
+            accumulator[tindakLanjut]++;
+          } else {
+            accumulator[tindakLanjut] = 1;
+          }
+
+          return accumulator;
+        }, {});
+
+        // Menambahkan field 'name' dan mengubah format objek
+        const resultWithNames = {
+          name: bulan,
+          ...result,
+        };
+
+        // Menyimpan hasil untuk bulan ini ke dalam array
+        resultByMonth.push(resultWithNames);
+      });
+
+      // Menyimpan hasil akhir ke dalam state atau melakukan operasi lain sesuai kebutuhan
+      console.log(resultByMonth);
+      setData(resultByMonth);
     } catch (error) {
       setResponsedata(error.data.msg);
     }
