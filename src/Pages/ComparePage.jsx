@@ -12,6 +12,35 @@ export const ComparePage = () => {
   const [currentPage2, setCurrentPage2] = useState(1);
   const [responseSaveData, setResponseSaveData] = useState("");
 
+  // Untuk Menangani Bulan
+  // Daftar nama bulan
+  const months = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+
+  // Mendapatkan nama bulan saat ini
+  const currentMonth = months[new Date().getMonth()];
+
+  // State untuk menyimpan nilai bulan yang dipilih
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+
+  // Fungsi untuk menangani perubahan pada pilihan bulan
+  const handleMonthChange = (event) => {
+    const selected = event.target.value;
+    setSelectedMonth(selected);
+  };
+
   // Untuk Menangani File Upload
   const handleFile1Change = (e) => {
     setFile1(e.target.files[0]);
@@ -37,6 +66,7 @@ export const ComparePage = () => {
     // Menambah Tipe Untuk Membedakan Tipe
     data.forEach((e) => {
       e.Tipe = 1;
+      e.Bulan = selectedMonth;
     });
     //console.log(data);
     try {
@@ -182,7 +212,7 @@ export const ComparePage = () => {
       <div className="container-xl">
         <div className="row">
           <div className="col-12 mt-3 fs-1 fw-bold">
-            <h1 className="h3 mb-4 mx-3 text-gray-800">Excel Compare Page</h1>
+            <h1 className="h3 mb-4 mx-3 text-gray-800">Excel Compare Page </h1>
           </div>
           {comparisonnull && (
             <div className="row d-flex justify-content-center">
@@ -309,13 +339,38 @@ export const ComparePage = () => {
               <div className="col-12">
                 <div className="card shadow mb-4">
                   <div className="card-header py-3">
-                    <div className="row d-flex justify-content-between">
+                    <div className="row d-flex justify-content-evenly">
                       <div className="col-4">
                         <h4 className="m-0 font-weight-bold text-primary">
                           Data Unik Dinkes
                         </h4>
                       </div>
-                      <div className="col-4 text-end mr-5">
+                      <div className="col-4">
+                        <div className="input-group">
+                          <label
+                            className="input-group-text"
+                            htmlFor="inputGroupSelect01"
+                          >
+                            Bulan
+                          </label>
+                          <select
+                            className="form-select"
+                            id="inputGroupSelect01"
+                            value={selectedMonth}
+                            onChange={handleMonthChange}
+                          >
+                            <option value="" disabled>
+                              Pilih...
+                            </option>
+                            {months.map((month, index) => (
+                              <option key={index} value={month}>
+                                {month}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      </div>
+                      <div className="col-4 text-end ">
                         <form onSubmit={handleSaveData1}>
                           <button
                             type="submit"
